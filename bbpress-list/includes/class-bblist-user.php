@@ -14,14 +14,23 @@ class BBPressList_User {
   * @param 		int $user_id - the ID of the user to retrieve followers for
   * @return      array
   */
+/*
+    public function __construct( $user_id, $follow_id ){
 
-  function get_followers( $user_id = 0 ) {
-    if ( empty ( $user_id ) ) {
-      $user_id = get_current_user_id();
+    if ( ! empty ( $user_id ) && ! empty ( $follow_id ) ) {
+      $this->user_id = (int) $user_id;
+      $this->follow_id = (int) $follow_id;
+
     }
-    $followers = get_user_meta ( $user_id, '_bbpresslist_followers', true );
+    //return $this->add_user_to_list();
 
-    return apply_filters( '_bbpresslist_followers', $followers, $user_id );
+  }
+*/
+  function get_followers( $user_id ) {
+
+    $followers = get_user_meta($user_id, '_bbpresslist_followers', true );
+
+    return $followers;
 
   }
 
@@ -36,25 +45,29 @@ class BBPressList_User {
   * @return      array
   */
 
-  function get_following ( $user_id = 0 ) {
-    if ( empty ( $user_id ) ) {
-      $user_id = get_current_user_id();
-    }
-    $following = get_user_id( $user_id, 'bbpresslist_following', true);
+  public function get_following($user_id)  {
 
-    return apply_filters( 'bbpresslist_following', $following, $user_id );
+  $following = get_user_meta( $user_id, 'bbpresslist_following', true);
+
+    return $following;
 
   }
 
-  function add_user_to_list( $user_id, $user_added = 0 ) {
-    $users_in_list = $this->get_following( $user_id );
-    if ( ! empty( $users_in_list ) && in_array ( $users_in_list ) ) {
-      $users_in_list[] = $user_added;
+  function add_user_to_list( $user_id, $follower_id ) {
+   $newuser_id = $user_id;
+
+  $users_in_list = $this->get_following($newuser_id);
+
+
+    if ( ! empty( $users_in_list )  ) {
+      $users_in_list[] = $follower_id;
     } else {
       $users_in_list = array();
-      $users_in_list[] = $user_added;
+      $users_in_list[] = $follower_id;
     }
-    $followers = $this->get_followers( $user_added );
+
+
+    $followers = $this->get_followers( $newuser_id );
     if( ! empty( $followers ) && in_array ( $followers ) ) {
       $followers[] = $user_id;
     } else {
@@ -62,17 +75,22 @@ class BBPressList_User {
       $followers[] = $user_id;
     }
 
-    do_action( 'bbpresslist_pre_follow_user', $user_id, $user_added );
+    //do_action( 'bbpresslist_pre_follow_user', $user_id, $user_added );
 
     // update the IDs that this user has in their BBPress List
-    $followed = update_user_meta ( $user_meta, 'bbpresslist_following', $users_in_list );
 
-    $followers = update_user_meta ( $user_added, '_bbpresslist_followers', $followers );
+   update_user_meta ( $user_id, 'bbpresslist_following', $users_in_list );
+
+  update_user_meta ( $follower_id, '_bbpresslist_followers', $followers );
+
+
+return 'heyhey';
+
   }
 
 }
 
-global $classBBPressList;
-$classBBPressList = new BBPressList_User();
+//global $classBBPressList;
+//$classBBPressList = new BBPressList_User();
 
 ?>

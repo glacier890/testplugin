@@ -25,7 +25,14 @@ include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-user.php' );
   public function __construct(){
    add_action ('wp_enqueue_scripts', array($this, 'load_scripts'));
    add_action('bbp_theme_after_reply_author_details', array($this, 'followlinks'));
+   $this->includes();
+  
   }
+
+function includes() {
+  include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/actions.php' );
+  include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-user.php' );
+}
 
 function load_scripts(){
   wp_enqueue_script( 'follow-js', plugins_url('js/follow.js', __FILE__), array('jquery'));
@@ -38,7 +45,7 @@ function load_scripts(){
      ) );
 }
 
-public function followlinks() {
+function followlinks() {
   ob_start();
   $reply_author_id = get_post_field( 'post_author', bbp_get_reply_id() );
 		$user_data = get_userdata( $reply_author_id );
@@ -47,7 +54,7 @@ public function followlinks() {
   ?>
   <?php if ($user_id !== $follow_id) { ?>
   <div class="follow-link">
-    <a href="#" class="bbpresslist-follow" data-user-id="<?php echo $user_id; ?>" date-follow-id="<?php echo $follow_id; ?>">Follow this user</a>
+    <a href="#" class="bbpresslist-follow" data-user-id="<?php echo $user_id; ?>" data-follow-id="<?php echo $follow_id; ?>">Follow this user</a>
   </div>
   <?php }
   echo ob_get_clean();
@@ -58,8 +65,5 @@ public function followlinks() {
 
 global $BBPressLists;
    $$BBPressLists = new BBPressList();
-
- ?>
-
 
  ?>

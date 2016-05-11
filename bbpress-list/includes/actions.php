@@ -1,15 +1,19 @@
 <?php
 
+include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-user.php' );
 
 function bbpresslist_process_follow() {
   if ( isset( $_POST['user_id'] ) && isset( $_POST['follow_id'] ) ) {
-    if ( $classBBPressList->add_user_to_list(  absint( $_POST['user_id'] ), absint( $_POST['follow_id'] ) ) ) {
-      echo 'success';
-    } else {
-      echo 'Failed';
-    }
+    $user_id = $_POST['user_id'];
+    $follower_id = $_POST['follow_id'];
+    $new_follow = new BBPressList_User;
+
+   //$tesing = $new_follow->add_user_to_list( $user_id, $follower_id );
+   $testing = $new_follow->add_user_to_list($user_id, $follower_id );
+
   }
-  die();
+  echo $testing;
+die();
 }
 
 

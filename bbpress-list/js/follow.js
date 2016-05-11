@@ -5,20 +5,16 @@ add / delete a user from your list
 $('.bbpresslist-follow').click(function(event){
   event.preventDefault();
 
-  var $this = $(this);
 
-  var data = {
-    action: 'bbpresslist_process_follow',
-    user_id: $this.data('user-id'),
-    follow_id: $this.data('follow-id'),
-    nonce: bbpresslist_js.nonce
-  }
+    var current_user_id = $(this).data('user-id');
+    var current_follow_id = $(this).data('follow-id');
+
   $.ajax({
   url: bbpresslist_js.ajaxurl,
   type:'POST',
-  data: data,
+    data: {"action" : "bbpresslist_process_follow", "user_id": current_user_id, "follow_id": current_follow_id },
   success: function(results){
-  alert('User has been added.');
+  console.log(results);
   }
 });
 })
