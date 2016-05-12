@@ -26,7 +26,7 @@ include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-user.php' );
    add_action ('wp_enqueue_scripts', array($this, 'load_scripts'));
    add_action('bbp_theme_after_reply_author_details', array($this, 'followlinks'));
    $this->includes();
-  
+
   }
 
 function includes() {
@@ -47,18 +47,27 @@ function load_scripts(){
 
 function followlinks() {
   ob_start();
+  $iffollow = new BBPressList_User;
   $reply_author_id = get_post_field( 'post_author', bbp_get_reply_id() );
 		$user_data = get_userdata( $reply_author_id );
 		$follow_id = $user_data->ID;
     $user_id = get_current_user_id();
   ?>
-  <?php if ($user_id !== $follow_id) { ?>
+  <?php if ($user_id !== $follow_id) {
+    if( $iffollow->is_following( $user_id, $follow_id ) ) { ?>
   <div class="follow-link">
-    <a href="#" class="bbpresslist-follow" data-user-id="<?php echo $user_id; ?>" data-follow-id="<?php echo $follow_id; ?>">Follow this user</a>
+    <a href="#" class="unfollow" data-user-id="<?php echo $user_id; ?>" data-follow-id="<?php echo $follow_id; ?>">Unfollow this user</a>
   </div>
+  <?php } else { ?>
+    <div class="follow-link">
+      <a href="#" class="follow" data-user-id="<?php echo $user_id; ?>" data-follow-id="<?php echo $follow_id; ?>">Follow this user</a>
+    </div>
   <?php }
+ }
   echo ob_get_clean();
 }
+
+
 
 
 }

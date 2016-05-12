@@ -2,7 +2,7 @@ jQuery(document).ready(function($){
   /*******************************
 add / delete a user from your list
 *******************************/
-$('.bbpresslist-follow').click(function(event){
+$('.follow-link a').click(function(event){
   event.preventDefault();
 
 
@@ -12,7 +12,10 @@ $('.bbpresslist-follow').click(function(event){
   $.ajax({
   url: bbpresslist_js.ajaxurl,
   type:'POST',
-    data: {"action" : "bbpresslist_process_follow", "user_id": current_user_id, "follow_id": current_follow_id },
+    data: {
+      "action" : $(this).hasClass('follow') ? "bbpresslist_process_follow" : "bbpresslist_process_unfollow",
+      "user_id": current_user_id,
+      "follow_id": current_follow_id },
   success: function(results){
   console.log(results);
   }

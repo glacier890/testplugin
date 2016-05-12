@@ -47,7 +47,7 @@ class BBPressList_User {
 
   public function get_following($user_id)  {
 
-  $following = get_user_meta( $user_id, 'bbpresslist_following', true);
+  $following = get_user_meta( $user_id, '_bbpresslist_following', true);
 
     return $following;
 
@@ -79,14 +79,72 @@ class BBPressList_User {
 
     // update the IDs that this user has in their BBPress List
 
-   update_user_meta ( $user_id, 'bbpresslist_following', $users_in_list );
+   update_user_meta ( $user_id, '_bbpresslist_following', $users_in_list );
 
   update_user_meta ( $follower_id, '_bbpresslist_followers', $followers );
 
 
-return 'heyhey';
+return 'Success';
 
   }
+
+function remove_user_to_list( $user_id = 0, $unfollow_user = 0 ) {
+
+
+
+	// get all IDs that $user_id follows
+	$following = $this->get_following( $user_id );
+
+	if ( is_array( $following ) && in_array( $unfollow_user, $following ) ) {
+
+		$modified = false;
+
+		foreach ( $following as $key => $follow ) {
+			if ( $follow == $unfollow_user ) {
+				unset( $following[$key] );
+				$modified = true;
+			}
+		}
+
+		if ( $modified ) {
+		 update_user_meta( $user_id, '_bbpresslist_following', $following );
+		}
+
+	}
+  // get all IDs that follow the user we have just unfollowed so that we can remove $user_id
+	$followers = $this->get_followers( $unfollow_user );
+
+	if ( is_array( $followers ) && in_array( $user_id, $followers ) ) {
+
+		$modified = false;
+
+		foreach ( $followers as $key => $follower ) {
+			if ( $follower == $user_id ) {
+				unset( $followers[$key] );
+				$modified = true;
+			}
+		}
+
+		if ( $modified ) {
+			update_user_meta( $unfollow_user, '_bbpresslist_followers', $followers );
+		}
+
+	}
+
+	return 'success';
+
+}
+
+function is_following( $user_id = 0, $followed_user = 0 ) {
+
+	$following = $this->get_following( $user_id );
+	$ret = false; // is not following by default
+	if ( is_array( $following ) && in_array( $followed_user, $following ) ) {
+		$ret = '1'; // is following
+	}
+	return $ret;
+
+}
 
 }
 
