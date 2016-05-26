@@ -17,9 +17,6 @@
 if(!defined('BBPRESSLIST_FOLLOW_DIR')) define('BBPRESSLIST_FOLLOW_DIR', dirname( __FILE__ ) );
 if(!defined('BBPRESSLIST_FOLLOW_URL')) define('BBPRESSLIST_FOLLOW_URL', plugin_dir_url( __FILE__ ) );
 
-include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/actions.php' );
-include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-user.php' );
-
  class BBPressList {
 
   public function __construct(){
@@ -32,6 +29,7 @@ include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-user.php' );
 function includes() {
   include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/actions.php' );
   include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-user.php' );
+  include_once( BBPRESSLIST_FOLLOW_DIR . '/includes/class-bblist-widget.php' );
 }
 
 function load_scripts(){
