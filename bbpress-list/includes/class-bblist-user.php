@@ -84,7 +84,7 @@ class BBPressList_User {
   update_user_meta ( $follower_id, '_bbpresslist_followers', $followers );
 
 
-return 'Success';
+return 'follow';
 
   }
 
@@ -131,7 +131,7 @@ function remove_user_to_list( $user_id = 0, $unfollow_user = 0 ) {
 
 	}
 
-	return 'success';
+	return 'unfollow';
 
 }
 

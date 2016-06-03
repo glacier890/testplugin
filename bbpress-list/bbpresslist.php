@@ -22,6 +22,7 @@ if(!defined('BBPRESSLIST_FOLLOW_URL')) define('BBPRESSLIST_FOLLOW_URL', plugin_d
   public function __construct(){
    add_action ('wp_enqueue_scripts', array($this, 'load_scripts'));
    add_action('bbp_theme_after_reply_author_details', array($this, 'followlinks'));
+   add_action('bbp_template_after_user_profile', array($this, 'editfollowers'));
    $this->includes();
 
   }
@@ -33,7 +34,7 @@ function includes() {
 }
 
 function load_scripts(){
-  wp_enqueue_script( 'follow-js', plugins_url('js/follow.js', __FILE__), array('jquery'));
+  wp_enqueue_script( 'follow-js', plugins_url('js/follow.js', __FILE__), array('jquery', 'jquery-ui-dialog'));
   wp_localize_script( 'follow-js', 'bbpresslist_js', array(
     'processing_error' => __( 'There was a problem processing your request.', 'pwuf' ),
 		'login_required'   => __( 'Oops, you must be logged-in to follow users.', 'pwuf' ),
@@ -65,7 +66,15 @@ function followlinks() {
   echo ob_get_clean();
 }
 
+function editfollowers() { ?>
 
+
+  <a class="bbp-user-edit-followers-link" href="#">Edit followers</a>
+
+  <div class="bbpresslist-edit-follower">
+    Hello World
+  </div>
+<?php }
 
 
 }
