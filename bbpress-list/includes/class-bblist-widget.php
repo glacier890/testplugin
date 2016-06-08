@@ -3,7 +3,8 @@ class BBPressList_Widget extends WP_Widget {
 
 	function __construct() {
 		// Instantiate the parent object
-		parent::__construct( false, 'BBPress Favorite Users' );
+		parent::__construct( false, 'BBPress Favorite Users',
+	 		array( 'description'=> 'Widget allows the user to view BBPress posts from forum authors they are following.'));
 }
 
 	/**
@@ -15,7 +16,7 @@ class BBPressList_Widget extends WP_Widget {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
-
+		echo '<section id="bbp-list-following-widget" class="widget widget_bbplist-following-posts">';
 		$current_user = get_current_user_id();
 		// Widget output
 		$title = apply_filters( 'widget_title', $instance['title'] );
@@ -27,12 +28,19 @@ class BBPressList_Widget extends WP_Widget {
 		// returns array of users the logg-ed user is following
 		$get_followers = $get_users->get_following( $current_user );
 
-		$followers_string = implode(',', $get_followers);
+		if( !empty( $get_followers ) ) {
+			$followers_string = implode(',', $get_followers);
+
+			if ( empty ( $instance['max_posts_shown'] ) ) {
+				$instance['max_posts_shown'] = 16;
+			}
 
 
 		$bbp_args = array(
-		'post_type'      => bbp_get_topic_post_type(), // Narrow query down to bbPress topics
+		'post_type'      => array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ), // Narrow query down to bbPress topics
 		'author'				=> $followers_string,
+		'posts_per_page'	=> (int) $instance['max_posts_shown'],
+		'ignore_sticky_posts'	=> true,
 		);
 
 		// Calls Loop to display users that the current user is following.
@@ -60,7 +68,10 @@ class BBPressList_Widget extends WP_Widget {
 
 <?php endwhile;
 
-
+		} else {
+			echo "<p>You are not currently following any users.</p>";
+		}
+		echo '</section>';
 	}
 
 	/**
@@ -69,6 +80,7 @@ class BBPressList_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['max_posts_shown'] = (int) $new_instance['max_posts_shown'];
 
 		return $instance;
 	}
@@ -78,12 +90,14 @@ class BBPressList_Widget extends WP_Widget {
 	*/
 	function form( $instance ) {
 		$title = esc_attr($instance['title']);
+		$maxpostsshown = esc_attr($instance['max_posts_shown']);
 		?>
 		<p>
   <label>Title</label>
   <input class="widefat" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 </p>
-
+<label>Maximum replies to show: </label>
+<input class="widefat" name="<?php echo $this->get_field_name('max_posts_shown'); ?>" type="text" value="<?php echo $maxpostsshown; ?>" />
 <?php
 
 	}
