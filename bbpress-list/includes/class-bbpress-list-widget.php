@@ -11,7 +11,6 @@ class BBPressList_Widget extends WP_Widget {
 	* Displays the widget.
 	*/
 	function widget( $args, $instance ) {
-
 		// Stops function if user is logged in
 		if ( ! is_user_logged_in() ) {
 			return;
@@ -21,7 +20,6 @@ class BBPressList_Widget extends WP_Widget {
 		// Widget output
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		echo '<h2>' . $title . '</h2>';
-
 
 		$get_users = new BBPressList_User;
 
@@ -93,17 +91,14 @@ class BBPressList_Widget extends WP_Widget {
 		$maxpostsshown = esc_attr($instance['max_posts_shown']);
 		?>
 		<p>
-  <label>Title</label>
-  <input class="widefat" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
-</p>
-<label>Maximum replies to show: </label>
-<input class="widefat" name="<?php echo $this->get_field_name('max_posts_shown'); ?>" type="text" value="<?php echo $maxpostsshown; ?>" />
-<?php
-
+  	<label>Title</label>
+  	<input class="widefat" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
+		</p>
+		<label>Maximum replies to show: </label>
+		<input class="widefat" name="<?php echo $this->get_field_name('max_posts_shown'); ?>" type="text" value="<?php echo $maxpostsshown; ?>" />
+		<?php
 	}
 }
-
-
 
 add_action( 'widgets_init', create_function( '', 'return register_widget("BBPressList_Widget");' ) );
 ?>
