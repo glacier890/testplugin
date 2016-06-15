@@ -52,6 +52,7 @@ class BBPress_List_Follow {
   function setup_actions() {
     add_action ( 'bbp_enqueue_scripts', array( $this, 'load_scripts' ) );
     add_action('bbp_theme_after_reply_author_details', array($this, 'followlinks'));
+    add_action('admin_init', array($this, 'bbp_follow_admin_settings'));
   }
 
   /**
@@ -97,6 +98,21 @@ class BBPress_List_Follow {
         }
         echo ob_get_clean();
   }
+
+function bbp_follow_admin_settings() {
+  add_settings_Section( 'bbp_follower_widget_type', 'BBP Follow User Settings', array($this, 'bbp_follower_settings'), 'bbpress' );
+  add_settings_field( 'bbp_follower_widget_type', 'Follow Users Forum Selection', array($this, 'bbp_follower_settings_forum'), 'bbpress', 'bbp_follower_widget_type' );
+  register_setting('bbpress', 'bbp_follower_widget_type');
+}
+
+function bbp_follower_settings(){
+  echo 'Test Setting Follow';
+}
+
+function bbp_follower_settings_forum() { ?>
+  <input type="text" name="bbp_follow_forums" />
+<?php }
+
 }
 
 global $BBPressLists;
