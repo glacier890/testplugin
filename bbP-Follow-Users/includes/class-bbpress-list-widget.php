@@ -33,12 +33,14 @@ class BBPressList_Widget extends WP_Widget {
 				$instance['max_posts_shown'] = 16;
 			}
 
+		$foruminclude = get_option('bbp_follower_type_select');
 
 		$bbp_args = array(
 		'post_type'      => array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ), // Narrow query down to bbPress topics
 		'author'				=> $followers_string,
 		'posts_per_page'	=> (int) $instance['max_posts_shown'],
 		'ignore_sticky_posts'	=> true,
+		'post_parent'	=> $foruminclude['bbp_forum_select']
 		);
 
 		// Calls Loop to display users that the current user is following.

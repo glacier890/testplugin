@@ -100,17 +100,29 @@ class BBPress_List_Follow {
   }
 
 function bbp_follow_admin_settings() {
-  add_settings_Section( 'bbp_follower_widget_type', 'BBP Follow User Settings', array($this, 'bbp_follower_settings'), 'bbpress' );
-  add_settings_field( 'bbp_follower_widget_type', 'Follow Users Forum Selection', array($this, 'bbp_follower_settings_forum'), 'bbpress', 'bbp_follower_widget_type' );
-  register_setting('bbpress', 'bbp_follower_widget_type');
+  add_settings_section( 'bbp_follower_widget_type', 'BBP Follow User Settings', array($this, 'bbp_follower_settings'), 'bbpress' );
+  add_settings_field( 'bbp_follower_type_select', 'Follow Users Forum Selection', array($this, 'bbp_follower_settings_forum'), 'bbpress', 'bbp_follower_widget_type' );
+  register_setting('bbpress', 'bbp_follower_type_select');
 }
 
 function bbp_follower_settings(){
   echo 'Test Setting Follow';
 }
 
-function bbp_follower_settings_forum() { ?>
-  <input type="text" name="bbp_follow_forums" />
+function bbp_follower_settings_forum() {
+  $options = get_option( 'bbp_follower_type_select' );  ?>
+  <select  name="bbp_follower_type_select[bbp_forum_select]" >
+    <?php $args = array(
+      'post_type' => 'forum',
+      'posts_per_page' => -1
+    );
+    $query = new WP_Query( $args ); ?>
+    <option id="bbp_follow_forum" value="">All forums</option>
+    <?php if ($query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); ?>
+    <option  value="<?php the_ID(); ?>"<?php selected($options['bbp_forum_select'], get_the_ID() ); ?>><?php the_title(); ?></option>
+  <?php endwhile; endif; ?>
+  </select>
+
 <?php }
 
 }
